@@ -7,7 +7,8 @@ var ui = require('./ui'),
     repo = require('./core/repo'),
     user = require('./core/user'),
     api = require('./core/api'),
-    store = require('store');
+    store = require('store'),
+    spaceknow = require('./spaceknow/spaceknow.js');
 
 var gjIO = geojsonIO(),
     gjUI = ui(gjIO).write;
@@ -18,6 +19,7 @@ gjIO.recovery = recovery(gjIO);
 gjIO.router.on();
 
 api(gjIO);
+spaceknow(gjIO);
 
 function geojsonIO() {
     var context = {};

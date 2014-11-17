@@ -233,6 +233,10 @@ button.major {
     color:#000;
 }
 
+#geojsonio-body .leaflet-control-scale {
+    margin-bottom: 40px;
+}
+
 /*
  * table ----------------------------------------------------------------------
  */
