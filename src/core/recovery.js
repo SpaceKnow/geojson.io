@@ -9,7 +9,7 @@ module.exports = function(context) {
     var query = qs.stringQs(location.hash.split('#')[1] || '');
 
     if (location.hash !== '#new' && !query.id && !query.data) {
-        var rec = context.storage.get('recover');
+        var rec = null;//context.storage.get('recover');
         if (rec && confirm('recover your map from the last time you edited?')) {
             context.data.set(rec);
             setTimeout(function() {

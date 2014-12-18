@@ -3589,7 +3589,7 @@ Traverse.prototype.reduce = function (cb, init) {
 Traverse.prototype.paths = function () {
     var acc = [];
     this.forEach(function (x) {
-        acc.push(this.path); 
+        acc.push(this.path);
     });
     return acc;
 };
@@ -3604,24 +3604,24 @@ Traverse.prototype.nodes = function () {
 
 Traverse.prototype.clone = function () {
     var parents = [], nodes = [];
-    
+
     return (function clone (src) {
         for (var i = 0; i < parents.length; i++) {
             if (parents[i] === src) {
                 return nodes[i];
             }
         }
-        
+
         if (typeof src === 'object' && src !== null) {
             var dst = copy(src);
-            
+
             parents.push(src);
             nodes.push(dst);
-            
+
             forEach(objectKeys(src), function (key) {
                 dst[key] = clone(src[key]);
             });
-            
+
             parents.pop();
             nodes.pop();
             return dst;
@@ -3636,13 +3636,13 @@ function walk (root, cb, immutable) {
     var path = [];
     var parents = [];
     var alive = true;
-    
+
     return (function walker (node_) {
         var node = immutable ? copy(node_) : node_;
         var modifiers = {};
-        
+
         var keepGoing = true;
-        
+
         var state = {
             node : node,
             node_ : node_,
@@ -3681,17 +3681,17 @@ function walk (root, cb, immutable) {
             stop : function () { alive = false },
             block : function () { keepGoing = false }
         };
-        
+
         if (!alive) return state;
-        
+
         function updateState() {
             if (typeof state.node === 'object' && state.node !== null) {
                 if (!state.keys || state.node_ !== state.node) {
                     state.keys = objectKeys(state.node)
                 }
-                
+
                 state.isLeaf = state.keys.length == 0;
-                
+
                 for (var i = 0; i < parents.length; i++) {
                     if (parents[i].node_ === node_) {
                         state.circular = parents[i];
@@ -3703,49 +3703,49 @@ function walk (root, cb, immutable) {
                 state.isLeaf = true;
                 state.keys = null;
             }
-            
+
             state.notLeaf = !state.isLeaf;
             state.notRoot = !state.isRoot;
         }
-        
+
         updateState();
-        
+
         // use return values to update if defined
         var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
-        
+
         if (modifiers.before) modifiers.before.call(state, state.node);
-        
+
         if (!keepGoing) return state;
-        
+
         if (typeof state.node == 'object'
         && state.node !== null && !state.circular) {
             parents.push(state);
-            
+
             updateState();
-            
+
             forEach(state.keys, function (key, i) {
                 path.push(key);
-                
+
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
-                
+
                 var child = walker(state.node[key]);
                 if (immutable && hasOwnProperty.call(state.node, key)) {
                     state.node[key] = child.node;
                 }
-                
+
                 child.isLast = i == state.keys.length - 1;
                 child.isFirst = i == 0;
-                
+
                 if (modifiers.post) modifiers.post.call(state, child);
-                
+
                 path.pop();
             });
             parents.pop();
         }
-        
+
         if (modifiers.after) modifiers.after.call(state, state.node);
-        
+
         return state;
     })(root).node;
 }
@@ -3753,7 +3753,7 @@ function walk (root, cb, immutable) {
 function copy (src) {
     if (typeof src === 'object' && src !== null) {
         var dst;
-        
+
         if (isArray(src)) {
             dst = [];
         }
@@ -3791,7 +3791,7 @@ function copy (src) {
             T.prototype = proto;
             dst = new T;
         }
-        
+
         forEach(objectKeys(src), function (key) {
             dst[key] = src[key];
         });
@@ -4339,7 +4339,7 @@ case 1: // replace escaped characters with actual character
                      .replace(/\\v/g,'\v')
                      .replace(/\\f/g,'\f')
                      .replace(/\\b/g,'\b');
-        
+
 break;
 case 2:this.$ = Number(yytext);
 break;
@@ -5076,7 +5076,7 @@ function request(options, callback) {
     else if(typeof options.body !== 'string')
       options.body = JSON.stringify(options.body)
   }
-  
+
   //BEGIN QS Hack
   var serialize = function(obj) {
     var str = [];
@@ -5086,7 +5086,7 @@ function request(options, callback) {
       }
     return str.join("&");
   }
-  
+
   if(options.qs){
     var qs = (typeof options.qs == 'string')? options.qs : serialize(options.qs);
     if(options.uri.indexOf('?') !== -1){ //no get params
@@ -5096,7 +5096,7 @@ function request(options, callback) {
     }
   }
   //END QS Hack
-  
+
   //BEGIN FORM Hack
   var multipart = function(obj) {
     //todo: support file type (useful?)
@@ -5119,7 +5119,7 @@ function request(options, callback) {
     result.type = 'multipart/form-data; boundary='+result.boundry;
     return result;
   }
-  
+
   if(options.form){
     if(typeof options.form == 'string') throw('form name unsupported');
     if(options.method === 'POST'){
@@ -6526,8 +6526,8 @@ osmtogeojson = function( data, options ) {
                 return [+n.lat,+n.lon];
               });
             }
-            // stolen from iD/geo.js, 
-            // based on https://github.com/substack/point-in-polygon, 
+            // stolen from iD/geo.js,
+            // based on https://github.com/substack/point-in-polygon,
             // ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
             var pointInPolygon = function(point, polygon) {
               var x = point[0], y = point[1], inside = false;
@@ -6568,7 +6568,7 @@ osmtogeojson = function( data, options ) {
           }
           // sanitize mp-coordinates (remove empty clusters or rings, {lat,lon,...} to [lon,lat]
           var mp_coords = [];
-          mp_coords = _.compact(mp.map(function(cluster) { 
+          mp_coords = _.compact(mp.map(function(cluster) {
             var cl = _.compact(cluster.map(function(ring) {
               if (ring.length < 4) // todo: is this correct: ring.length < 4 ?
                 return;
@@ -6706,7 +6706,7 @@ osmtogeojson = function( data, options ) {
       if ( pfk.excluded_values && pfk.excluded_values[val] !== true )
         return true;
     }
-    // if no tags matched, this ain't no area. 
+    // if no tags matched, this ain't no area.
     return false;
   }
 };
@@ -9484,7 +9484,7 @@ Usage:
 function JSZip(data, options) {
     // if this constructor is used without `new`, it adds `new` before itself:
     if(!(this instanceof JSZip)) return new JSZip(data, options);
-    
+
     // object containing the files :
     // {
     //   "folder/" : {...},
@@ -9574,7 +9574,7 @@ module.exports = function(data, options) {
 (function (Buffer){
 'use strict';
 module.exports = function(data, encoding){
-    return new Buffer(data, encoding);   
+    return new Buffer(data, encoding);
 };
 module.exports.test = function(b){
     return Buffer.isBuffer(b);
@@ -9884,7 +9884,7 @@ var parentFolder = function (path) {
  * Add a (sub) folder in the current folder.
  * @private
  * @param {string} name the folder's name
- * @param {boolean=} [createFolders] If true, automatically create sub 
+ * @param {boolean=} [createFolders] If true, automatically create sub
  *  folders. Defaults to false.
  * @return {Object} the new folder.
  */
@@ -10343,7 +10343,7 @@ var out = {
             default : // case "string" :
                return zip;
          }
-      
+
     },
 
     /**
@@ -14540,7 +14540,7 @@ function GZheader() {
                        // but leave for few code modifications
 
   //
-  // Setup limits is not necessary because in js we should not preallocate memory 
+  // Setup limits is not necessary because in js we should not preallocate memory
   // for inflate use constant limit in 65536 bytes
   //
 
@@ -18470,11 +18470,11 @@ module.exports = function(gj) {
 		store.disabled = true
 	}
 	store.enabled = !store.disabled
-	
+
 	if (typeof module != 'undefined' && module.exports) { module.exports = store }
 	else if (typeof define === 'function' && define.amd) { define(store) }
 	else { win.store = store }
-	
+
 })(this.window || global);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -21991,7 +21991,7 @@ module.exports = function(context) {
     var query = qs.stringQs(location.hash.split('#')[1] || '');
 
     if (location.hash !== '#new' && !query.id && !query.data) {
-        var rec = context.storage.get('recover');
+        var rec = null;//context.storage.get('recover');
         if (rec && confirm('recover your map from the last time you edited?')) {
             context.data.set(rec);
             setTimeout(function() {
@@ -22734,7 +22734,7 @@ module.exports = function(context) {
             var geojson = context.data.get('map');
             var props;
 
-            if (!geojson || !geojson.geometry && 
+            if (!geojson || !geojson.geometry &&
                 (!geojson.features || !geojson.features.length)) {
                 selection
                     .html('')
