@@ -23698,7 +23698,7 @@ module.exports = function(context) {
             .on('click', layerSwap)
             .text(function(d) { return d.title; });
 
-        layerButtons.filter(function(d, i) { return i === 0; }).call(layerSwap);
+        layerButtons.filter(function(d, i) { return i === 1; }).call(layerSwap);
 
     };
 };
